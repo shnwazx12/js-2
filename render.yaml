@@ -1,0 +1,40 @@
+# render.yaml
+# Render Blueprint – deploys the NSFW bot as a Web Service so Render
+# can health-check it and assign a public HTTPS URL for Telegram webhooks.
+# Docs: https://render.com/docs/render-yaml-spec
+
+services:
+  - type: web                           # Web Service → gets a public HTTPS URL
+    name: nsfw-detection-bot
+    runtime: node
+    region: oregon                      # change: frankfurt | singapore | ohio | virginia
+    plan: free                          # or starter / standard
+
+    buildCommand: npm install
+    startCommand: node src/index.js
+
+    # Render health-check hits GET /health — our server.js responds with { status:"healthy" }
+    healthCheckPath: /health
+
+    envVars:
+      - key: BOT_TOKEN
+        sync: false                     # set this secret in the Render dashboard
+
+      - key: MONGO_URI
+        sync: false                     # set this secret in the Render dashboard
+
+      # Render injects the public URL of this service automatically.
+      # server.js uses it to register the Telegram webhook.
+      - key: WEBHOOK_DOMAIN
+        fromService:
+          type: web
+          name: nsfw-detection-bot
+          property: host
+
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 3000
+
+    autoDeploy: true
