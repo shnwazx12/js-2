@@ -123,8 +123,8 @@ bot.command('start', async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '💬 Support Chat', url: 'https://t.me/VivaanSupport' },
-            { text: '📢 News Channel', url: 'https://t.me/VivaanUpdates' },
+            { text: '💬 Support Chat', url: 'https://t.me/YourMoreBotsChannel' },
+            { text: '📢 News Channel', url: 'https://t.me/YourMoreBotsChannel' },
           ],
         ],
       },
